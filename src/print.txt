@@ -1,0 +1,15 @@
+ XLiFE++ v2.3 (2022-04-22)
+ running on 9.mar.2024 at 23h22 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
+
+Machine epsilon                     theEpsilon_= 2.22045e-16
+Greatest real number (real_t)       theRealMax_= 1.79769e+308
+Divide by zero threshold      theZeroThreshold_= 1e-30
+Default convergence threshold     theTolerance_= 2.22045e-12
+Greatest integer (int)                 INT_MAX = 2147483647
+Greatest unsigned (number_t)      theNumberMax_= 18446744073709551615
+Greatest address (size_t)           theSizeMax_= 18446744073709551615
+Greatest dimension (dimen_t)         theDimMax_= 65535
+-------------------------------------------------------------
+
+Mesh size = 0.0314159 Number of Triangles = 22404
+Program finished

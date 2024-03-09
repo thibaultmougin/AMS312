@@ -1,0 +1,29 @@
+Info    : Running '/usr/bin/gmsh -3 -format msh2 xlifepp_script.geo -o xlifepp_script.msh' [Gmsh 4.8.4, 1 node, max. 1 thread]
+Info    : Started on Sat Mar  9 23:22:29 2024
+Info    : Reading 'xlifepp_script.geo'...
+Info    : Reading '/home/tmougin/xlifepp-sources-v2.3-2022-04-22/etc/gmsh/xlifepp_macros.geo'...
+Info    : Done reading '/home/tmougin/xlifepp-sources-v2.3-2022-04-22/etc/gmsh/xlifepp_macros.geo'
+Info    : Done reading 'xlifepp_script.geo'
+Info    : Meshing 1D...
+Info    : [  0%] Meshing curve 1 (Ellipse)
+Info    : [ 10%] Meshing curve 2 (Ellipse)
+Info    : [ 20%] Meshing curve 3 (Ellipse)
+Info    : [ 30%] Meshing curve 4 (Ellipse)
+Info    : [ 40%] Meshing curve 6 (Ellipse)
+Info    : [ 50%] Meshing curve 7 (Ellipse)
+Info    : [ 50%] Meshing curve 8 (Ellipse)
+Info    : [ 60%] Meshing curve 9 (Ellipse)
+Info    : [ 70%] Meshing curve 11 (Ellipse)
+Info    : [ 80%] Meshing curve 12 (Ellipse)
+Info    : [ 90%] Meshing curve 13 (Ellipse)
+Info    : [100%] Meshing curve 14 (Ellipse)
+Info    : Done meshing 1D (Wall 0.0023514s, CPU 0.001597s)
+Info    : Meshing 2D...
+Info    : Meshing surface 5 (Plane, Frontal-Delaunay)
+Info    : Done meshing 2D (Wall 0.301885s, CPU 0.286887s)
+Info    : Meshing 3D...
+Info    : Done meshing 3D (Wall 0.0037432s, CPU 8.7e-05s)
+Info    : 11468 nodes 22947 elements
+Info    : Writing 'xlifepp_script.msh'...
+Info    : Done writing 'xlifepp_script.msh'
+Info    : Stopped on Sat Mar  9 23:22:30 2024 (From start: Wall 0.589817s, CPU 0.560396s)

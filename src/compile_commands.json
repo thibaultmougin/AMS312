@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/tmougin/cours/AMS312/TP/src",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-11  -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/src -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/include -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/ext/Eigen/Eigen -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/build  -fopenmp -O3 -DNDEBUG -o CMakeFiles/exec-x86_64-linux-g++-11-Release.dir/UTD_fonctions.cpp.o -c /home/tmougin/cours/AMS312/TP/src/UTD_fonctions.cpp",
+  "file": "/home/tmougin/cours/AMS312/TP/src/UTD_fonctions.cpp"
+},
+{
+  "directory": "/home/tmougin/cours/AMS312/TP/src",
+  "command": "/usr/bin/x86_64-linux-gnu-g++-11  -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/src -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/include -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/ext/Eigen/Eigen -I/home/tmougin/xlifepp-sources-v2.3-2022-04-22/build  -fopenmp -O3 -DNDEBUG -o CMakeFiles/exec-x86_64-linux-g++-11-Release.dir/main.cpp.o -c /home/tmougin/cours/AMS312/TP/src/main.cpp",
+  "file": "/home/tmougin/cours/AMS312/TP/src/main.cpp"
+}
+]

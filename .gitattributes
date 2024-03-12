@@ -1,1 +1,2 @@
 *.make linguist-detectable=false
+*.cpp.o.d linguist-detectable=false

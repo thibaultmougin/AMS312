@@ -1,5 +1,5 @@
  XLiFE++ v2.3 (2022-04-22)
- running on 9.mar.2024 at 23h22 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
+ running on 12.mar.2024 at 19h06 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
 
 Machine epsilon                     theEpsilon_= 2.22045e-16
 Greatest real number (real_t)       theRealMax_= 1.79769e+308
@@ -12,4 +12,6 @@ Greatest dimension (dimen_t)         theDimMax_= 65535
 -------------------------------------------------------------
 
 Mesh size = 0.0314159 Number of Triangles = 22404
+TermMatrix lhs computed, size 252 X 252:   SuTermMatrix lhs_l0_lt0 :   block (lt0, l0) -> matrix 252 X 252 of complex scalar in symmetric_dense (31878 coefficients)
+
 Program finished

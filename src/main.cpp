@@ -74,7 +74,7 @@ int main(int argc, char** argv)
   gamma2.setNormalOrientation(_towardsInfinite);
   Domain gamma=merge(gamma1,gamma2,"Gamma");  // pour full BEM
   gamma.setNormalOrientation(_towardsInfinite);
-
+  
   //defining parameter and kernel
   Parameters pars;
   pars << Parameter(k,"k")<<Parameter(Point(cos(theta),sin(theta)),"dinc");
@@ -86,9 +86,33 @@ int main(int argc, char** argv)
                           QuadratureIM(_GaussLegendreRule,10),_regularPart,theRealMax);     //integration methods for singular IR
   IntegrationMethods IMir2(_GaussLegendreRule,10);                                          //integration methods for regular IR
 
+
   // =================================
   //             full BEM
   // =================================
+
+// defining space, unknown and test function
+  Space V0(_domain=gamma, _interpolation=P1, _name="V0", _notOptimizeNumbering);
+  Unknown l0(V0, _name="l0"); TestFunction lt0(l0, _name="lt0");
+  
+  BilinearForm blf= intg(gamma, gamma, l0*G*lt0,IMie);
+  LinearForm lf=intg(gamma, fuinc*lt0);
+
+  TermMatrix lhs(blf, _name="lhs");
+  TermVector rhs(lf);
+  TermVector sol=directSolve(lhs, rhs);
+
+  // Representing the solution FEM and BEM
+  Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
+  Unknown ur(Vrep, _name="ur");
+
+  TermVector Uext = - integralRepresentation(ur, omega, intg(gamma, G*sol(l0), IMir2));
+
+  TermVector Uinc(ur, omega, fuinc);
+  saveToFile("Uinc", Uinc, vtu); // Incident field
+  saveToFile("Uext", Uext, vtu); // scattered field in exterior domain
+  TermVector Uext_t = Uext + Uinc;
+  saveToFile("Uext_t", Uext_t, vtu); // Total field in exterior domain
 
   // =================================
   //        it�ratif BEM-BEM

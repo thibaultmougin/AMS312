@@ -102,7 +102,6 @@ int main(int argc, char** argv)
   TermVector rhs(lf);
   TermVector sol=directSolve(lhs, rhs);
 
-  // Representing the solution FEM and BEM
   Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
   Unknown ur(Vrep, _name="ur");
 
@@ -110,9 +109,9 @@ int main(int argc, char** argv)
 
   TermVector Uinc(ur, omega, fuinc);
   saveToFile("Uinc", Uinc, vtu); // Incident field
-  saveToFile("Uext", Uext, vtu); // scattered field in exterior domain
+  saveToFile("Uext_full_BEM", Uext, vtu); // scattered field in exterior domain
   TermVector Uext_t = Uext + Uinc;
-  saveToFile("Uext_t", Uext_t, vtu); // Total field in exterior domain
+  saveToFile("Uext_t_full_BEM", Uext_t, vtu); // Total field in exterior domain
 
   // =================================
   //        it�ratif BEM-BEM

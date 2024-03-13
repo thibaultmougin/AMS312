@@ -96,7 +96,7 @@ int main(int argc, char** argv)
   Unknown l0(V0, _name="l0"); TestFunction lt0(l0, _name="lt0");
   
   BilinearForm blf= intg(gamma, gamma, l0*G*lt0,IMie);
-  LinearForm lf=intg(gamma, fuinc*lt0);
+  LinearForm lf= - intg(gamma, fuinc*lt0);
 
   TermMatrix lhs(blf, _name="lhs");
   TermVector rhs(lf);
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
   Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
   Unknown ur(Vrep, _name="ur");
 
-  TermVector Uext = - integralRepresentation(ur, omega, intg(gamma, G*sol(l0), IMir2));
+  TermVector Uext = integralRepresentation(ur, omega, intg(gamma, G*sol(l0), IMir2));
 
   TermVector Uinc(ur, omega, fuinc);
   saveToFile("Uinc", Uinc, vtu); // Incident field

@@ -91,27 +91,29 @@ int main(int argc, char** argv)
   //             full BEM
   // =================================
 
-// defining space, unknown and test function
-  Space V0(_domain=gamma, _interpolation=P1, _name="V0", _notOptimizeNumbering);
-  Unknown l0(V0, _name="l0"); TestFunction lt0(l0, _name="lt0");
-  
-  BilinearForm blf= intg(gamma, gamma, l0*G*lt0,IMie);
-  LinearForm lf= - intg(gamma, fuinc*lt0);
 
-  TermMatrix lhs(blf, _name="lhs");
-  TermVector rhs(lf);
-  TermVector sol=directSolve(lhs, rhs);
+  Space H(_domain=gamma, _interpolation=P1, _name="H", _notOptimizeNumbering);
+  Unknown p(H, _name="p"); TestFunction q(p, _name="q");
+  
+  TermVector Uinc(p, gamma,fuinc,"Uinc");
+
+  BilinearForm mlf= intg(gamma, p*q);
+  BilinearForm blf= 0.5*intg(gamma, p*q)-intg(gamma, gamma, p*ndotgrad_y(G)*q,IMie);
+
+  TermMatrix K(blf,"K"), M(mlf,"M");
+  TermVector P = directSolve(K,M*Uinc);
 
   Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
   Unknown ur(Vrep, _name="ur");
 
-  TermVector Uext = integralRepresentation(ur, omega, intg(gamma, G*sol(l0), IMir2));
+  TermVector Uext = integralRepresentation(ur, omega, intg(gamma, ndotgrad_y(G)*P, IMir));
 
-  TermVector Uinc(ur, omega, fuinc);
   saveToFile("Uinc", Uinc, vtu); // Incident field
   saveToFile("Uext_full_BEM", Uext, vtu); // scattered field in exterior domain
-  TermVector Uext_t = Uext + Uinc;
+  TermVector Uext_t = Uext + TermVector(ur,omega,fuinc);
   saveToFile("Uext_t_full_BEM", Uext_t, vtu); // Total field in exterior domain
+
+
 
   // =================================
   //        it�ratif BEM-BEM

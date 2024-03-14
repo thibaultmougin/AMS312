@@ -1,5 +1,5 @@
  XLiFE++ v2.3 (2022-04-22)
- running on 13.mar.2024 at 23h07 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
+ running on 14.mar.2024 at 12h44 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
 
 Machine epsilon                     theEpsilon_= 2.22045e-16
 Greatest real number (real_t)       theRealMax_= 1.79769e+308
@@ -12,6 +12,11 @@ Greatest dimension (dimen_t)         theDimMax_= 65535
 -------------------------------------------------------------
 
 Mesh size = 0.0314159 Number of Triangles = 22404
-TermMatrix lhs computed, size 252 X 252:   SuTermMatrix lhs_l0_lt0 :   block (lt0, l0) -> matrix 252 X 252 of complex scalar in symmetric_dense (31878 coefficients)
+TermMatrix K computed, size 252 X 252:   SuTermMatrix K_p_q :   block (q, p) -> matrix 252 X 252 of complex scalar in row/column_dense (63504 coefficients)
 
+TermMatrix M computed, size 252 X 252:   SuTermMatrix M_p_q :   block (q, p) -> matrix 252 X 252 of real scalar in symmetric_compressed sparse (csr,csc) (504 coefficients)
+
+integralRepresentation(Unknown, GeomDomain, ...)>computeNormalsAt(vector<Point>, GeomDomain)>MeshDomain::setNormalOrientation ...
+Warning XLiFE++ : free_warning (see "print.txt" for more)
+in setNormalOrientation, domain Omega is not a manifold, nothing is done
 Program finished

@@ -52,7 +52,7 @@ int main(int argc, char** argv)
   init(argc, argv, _lang=en);   // mandatory initialization of xlifepp
   verboseLevel(1);
 
-  Real k=20.;    // wave number
+  Real k=50.;    // wave number
   Real theta=0;  // incidence angle
 
   //mesh
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
   //             full BEM
   // =================================
 
-/*
+
   Space H(_domain=gamma, _interpolation=P1, _name="H", _notOptimizeNumbering);
   Unknown p(H, _name="p"); TestFunction q(p, _name="q");
   
@@ -106,26 +106,26 @@ int main(int argc, char** argv)
   Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
   Unknown ur(Vrep, _name="ur");
 
-  TermVector Uext = integralRepresentation(ur, omega, intg(gamma, ndotgrad_y(G)*P, IMir));
+  TermVector Ud = integralRepresentation(ur, omega, intg(gamma, ndotgrad_y(G)*P, IMir));
 
   saveToFile("Uinc", Uinc, vtu); // Incident field
-  saveToFile("Uext_full_BEM", Uext, vtu); // scattered field in exterior domain
-  TermVector Uext_t = Uext + TermVector(ur,omega,fuinc);
-  saveToFile("Uext_t_full_BEM", Uext_t, vtu); // Total field in exterior domain
-*/
+  saveToFile("Ud_full_BEM", Ud, vtu); // scattered field in exterior domain
+  TermVector Ut = Ud + TermVector(ur,omega,fuinc);
+  saveToFile("Ut_full_BEM", Ut, vtu); // Total field in exterior domain
+
 
   // =================================
   //        it�ratif BEM-BEM
   // =================================
 
+/*
   Space H_gamma1(_domain=gamma1, _interpolation=P1, _name="H_gamma1", _notOptimizeNumbering);
   Space H_gamma2(_domain=gamma2, _interpolation=P1, _name="H_gamma2", _notOptimizeNumbering);
   
   Unknown p_1(H_gamma1, _name="p_1"); TestFunction q_1(p_1, _name="q_1");
   Unknown p_2(H_gamma2, _name="p_2"); TestFunction q_2(p_2, _name="q_2");
 
-  
-  int n =10;
+  int n =50;
 
   TermVector U_1(p_1, gamma1,fuinc,"U_1");
   TermVector U_2(p_2, gamma2,fuinc,"U_2");
@@ -133,59 +133,55 @@ int main(int argc, char** argv)
   TermVector P_1_sum(p_1, gamma1,0.,"P_1_sum");
   TermVector P_2_sum(p_2, gamma2,0.,"P_2_sum");
 
-  BilinearForm mlf,blf;
+  P_1_sum=P_1_sum*0;
+  P_2_sum=P_2_sum*0;
 
-  mlf= intg(gamma1, p_1*q_1);
-  TermMatrix M_1(mlf,"M_1");
-
-  mlf= intg(gamma2, p_2*q_2);
-  TermMatrix M_2(mlf,"M_2");
+  BilinearForm mlf_1,blf_1;
+  BilinearForm mlf_2,blf_2;
 
   for (int i=0;i<n;i++){
 
     printf("\n \n  iteration %d \n \n", i);
 
-    blf= 0.5*intg(gamma1, p_1*q_1)-intg(gamma1, gamma1, p_1*ndotgrad_y(G)*q_1,IMie);
+    blf_1= 0.5*intg(gamma1, p_1*q_1)-intg(gamma1, gamma1, p_1*ndotgrad_y(G)*q_1,IMie);
+    mlf_1= intg(gamma1, p_1*q_1);
 
-    TermMatrix K_1(blf,"K_1");
+    TermMatrix M_1(mlf_1,"M_1");
+    TermMatrix K_1(blf_1,"K_1");
     TermVector P_1 = directSolve(K_1,M_1*U_1);
 
-    P_1_sum +=   P_1;
+    P_1_sum = P_1_sum+ P_1;
 
-    blf= 0.5*intg(gamma2, p_2*q_2)-intg(gamma2, gamma2, p_2*ndotgrad_y(G)*q_2,IMie);
+    blf_2= 0.5*intg(gamma2, p_2*q_2)-intg(gamma2, gamma2, p_2*ndotgrad_y(G)*q_2,IMie);
+    mlf_2= intg(gamma2, p_2*q_2);
 
-    TermMatrix K_2(blf,"K_2");
+    TermMatrix M_2(mlf_2,"M_2");
+    TermMatrix K_2(blf_2,"K_2");
     TermVector P_2 = directSolve(K_2,M_2*U_2);
 
-    P_2_sum += P_2;
+    P_2_sum = P_2_sum+ P_2;
 
-    Unknown ur_1(H_gamma1, _name="ur_1");
-    Unknown ur_2(H_gamma2, _name="ur_2");
-
-    TermVector U_1 = integralRepresentation(ur_1, gamma1, intg(gamma2, ndotgrad_y(G)*P_2, IMir));
-    TermVector U_2 = integralRepresentation(ur_2, gamma2, intg(gamma1, ndotgrad_y(G)*P_1, IMir));
-
+    TermVector U_1 = integralRepresentation(p_1, gamma1, intg(gamma2, ndotgrad_y(G)*P_2, IMir));
+    TermVector U_2 = integralRepresentation(p_2, gamma2, intg(gamma1, ndotgrad_y(G)*P_1, IMir));
 
   }
 
 
   Space Vrep(_domain=omega, _interpolation=P1, _name="Vrep", _notOptimizeNumbering);
-  Unknown ur_ext(Vrep, _name="ur_ext");
+  Unknown ur(Vrep, _name="ur_ext");
   
-  TermVector Uext_1 = integralRepresentation(ur_ext, omega, intg(gamma1, ndotgrad_y(G)*P_1_sum, IMir));
-  TermVector Uext_2 = integralRepresentation(ur_ext, omega, intg(gamma2, ndotgrad_y(G)*P_2_sum, IMir));
+  TermVector Uext_1 = integralRepresentation(ur, omega, intg(gamma1, ndotgrad_y(G)*P_1_sum, IMir));
+  TermVector Uext_2 = integralRepresentation(ur, omega, intg(gamma2, ndotgrad_y(G)*P_2_sum, IMir));
   
   TermVector Ud = Uext_1 + Uext_2;
 
-  saveToFile("Ud", Ud, vtu); // scattered field in exterior domain
+  saveToFile("Ud_BEM_BEM", Ud, vtu); // scattered field in exterior domain
 
-  TermVector Uinc(ur_ext, omega,fuinc,"Uinc");
-    
-  TermVector Ut = Ud + Uinc;
+  TermVector Ut = Ud + TermVector(ur,omega,fuinc);
 
-  saveToFile("Ut", Ut, vtu); // scattered field in exterior domain
+  saveToFile("Ut_BEM_BEM", Ut, vtu); // scattered field in exterior domain
 
-
+*/
 
   // =================================
   //      it�ratif Kirchoff-BEM

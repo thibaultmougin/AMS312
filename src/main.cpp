@@ -225,6 +225,7 @@ int main(int argc, char** argv)
   TermMatrix K(blf,"K");
   TermMatrix K_f;
   factorize(K,K_f);
+
   TermVector dincs;
   
   for (int i=1;i<=n;i++){
@@ -260,7 +261,10 @@ int main(int argc, char** argv)
   TermVector Ud = (U_ext1 + U_ext2);
     
   saveToFile("Ud_Kirchoff_BEM", Ud, vtu); // scattered field in exterior domain
+    
+  TermVector Ut = Ud + TermVector(ur,omega,fuinc);
 
+  saveToFile("Ut_Kirchoff_BEM", Ut, vtu); // scattered field in exterior domain
 
   // =================================
   //      it�ratif UTD-BEM

@@ -15,10 +15,6 @@ Vector<Complex> grad_uinc(const Point& M, Parameters& pa = defaultParameters)
   return i_*k*exp(i_*(k*dot(M,d)))*Vector<Complex>(d);
 }
 
-Vector<Real> dir_uinc(const Point& M, Parameters& pa = defaultParameters){
-  Real k=pa("k");Point d=pa("dinc");
-  return imag(grad_uinc(M,pa)/(k*uinc(M,pa)));
-}
 
 // tools for Kirchoff approximation
 real_t shadowColoringRule(const GeomElement& gelt,
@@ -86,7 +82,6 @@ int main(int argc, char** argv)
   Kernel G=Helmholtz2dKernel(pars);
   Function fuinc(uinc,pars);
   Function ginc(grad_uinc,pars);
-  Function dinc(dir_uinc,pars);
   IntegrationMethods IMie(Duffy,15,0.,_defaultRule,12,1.,_defaultRule,10,2.,_defaultRule,8);// integration methods for IE
   IntegrationMethods IMir(LenoirSalles2dIR(),_singularPart,theRealMax,
                           QuadratureIM(_GaussLegendreRule,10),_regularPart,theRealMax);     //integration methods for singular IR
@@ -121,7 +116,7 @@ int main(int argc, char** argv)
   //        it�ratif BEM-BEM
   // =================================
 
-
+/*
   Space H_gamma1(_domain=gamma1, _interpolation=P1, _name="H_gamma1", _notOptimizeNumbering);
   Space H_gamma2(_domain=gamma2, _interpolation=P1, _name="H_gamma2", _notOptimizeNumbering);
   
@@ -194,13 +189,13 @@ int main(int argc, char** argv)
 
   saveToFile("Ut_BEM_BEM", Ut, vtu); // scattered field in exterior domain
 
-
+*/
 
   // =================================
   //      it�ratif Kirchoff-BEM
   // =================================
 
-/*
+
   Space H_gamma1(_domain=gamma1, _interpolation=P1, _name="H_gamma1", _notOptimizeNumbering);
   Space H_gamma2(_domain=gamma2, _interpolation=P1, _name="H_gamma2", _notOptimizeNumbering);
   Space Omega(_domain=omega, _interpolation=P1, _name="Omega", _notOptimizeNumbering);
@@ -212,23 +207,26 @@ int main(int argc, char** argv)
 
   Unknown ur(Omega, _name="ur"); TestFunction vr(ur, _name="vr");
   
-  Unknown ur_dim2(Omega, _name="ur_dim2", d=2); 
 
-  int n =10;
+  int n =1;
+
 
   TermVector U_1(p_1, gamma1,fuinc,"U_1");
   TermVector U_2(p_2, gamma2,fuinc,"U_2");
   TermVector grad_U_1(g_1, gamma1,ginc,"grad_U_1");
-  TermVector dincs(ur_dim2,omega,dinc,"dincs");
   TermVector u_1_tilde(p_1, gamma1,0.,"u_1_tilde");
   TermVector P2(p_2, gamma2,0.,"P2");
 
   BilinearForm mlf= intg(gamma2, p_2*q_2);
 
   TermMatrix M(mlf,"M");
-
+  
   for (int i=1;i<=n;i++){
     printf("\n \n  iteration %d \n \n", i);
+
+    TermVector dincs = imag(grad_U_1/U_1)/k;
+  
+
     setColor(gamma1,dincs,shadowColoringRule);
 
     u_1_tilde += U_1;
@@ -246,7 +244,7 @@ int main(int argc, char** argv)
     TermVector P2 = P2+  P;
 
     U_1= integralRepresentation(p_1, gamma1, intg(gamma2, ndotgrad_y(G)*P, IMir));
-    grad_U_1= integralRepresentation(g_1,gamma1,intg(gamma2,grad_x(ndotgrad_y(G))*(P),IMir));
+    grad_U_1= integralRepresentation(g_1,gamma1,intg(gamma2,grad_x(ndotgrad_y(G))*p_2,IMir),P);
 
 
   }
@@ -255,9 +253,9 @@ int main(int argc, char** argv)
   TermVector U_ext2 = integralRepresentation(ur, omega, intg(gamma2, ndotgrad_y(G)*P2, IMir));
 
   TermVector Ud = (U_ext1 + U_ext2);
-
+    
   saveToFile("Ud_Kirchoff_BEM", Ud, vtu); // scattered field in exterior domain
-*/
+
 
   // =================================
   //      it�ratif UTD-BEM

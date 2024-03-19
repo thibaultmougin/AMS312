@@ -203,48 +203,53 @@ int main(int argc, char** argv)
   Unknown p_1(H_gamma1, _name="p_1"); TestFunction q_1(p_1, _name="q_1");
   Unknown p_2(H_gamma2, _name="p_2"); TestFunction q_2(p_2, _name="q_2");
 
-  Unknown g_1(H_gamma1, _name="g_1", d=2); TestFunction h_1(g_1, _name="h_1");
+  Unknown g_1(H_gamma1, _name="g_1", d=2); 
 
-  Unknown ur(Omega, _name="ur"); TestFunction vr(ur, _name="vr");
+  Unknown ur(Omega, _name="ur");
   
-
-  int n =1;
-
+  int n = 10;
 
   TermVector U_1(p_1, gamma1,fuinc,"U_1");
   TermVector U_2(p_2, gamma2,fuinc,"U_2");
   TermVector grad_U_1(g_1, gamma1,ginc,"grad_U_1");
+
   TermVector u_1_tilde(p_1, gamma1,0.,"u_1_tilde");
   TermVector P2(p_2, gamma2,0.,"P2");
 
   BilinearForm mlf= intg(gamma2, p_2*q_2);
 
   TermMatrix M(mlf,"M");
+
+  BilinearForm blf= 0.5*intg(gamma2, p_2*q_2)-intg(gamma2, gamma2, p_2*ndotgrad_y(G)*q_2,IMie);
+
+  TermMatrix K(blf,"K");
+  TermMatrix K_f;
+  factorize(K,K_f);
+  TermVector dincs;
   
   for (int i=1;i<=n;i++){
+
     printf("\n \n  iteration %d \n \n", i);
 
-    TermVector dincs = imag(grad_U_1/U_1)/k;
+    dincs = imag(grad_U_1/U_1)/k;
   
-
     setColor(gamma1,dincs,shadowColoringRule);
+    
+    restrictToLightZone(U_1);
 
     u_1_tilde += U_1;
 
     if(i==1){
-      U_2+=2*integralRepresentation(p_2, gamma2, intg(gamma1, ndotgrad_y(G)*u_1_tilde, IMir));
+      U_2+=2*integralRepresentation(p_2, gamma2, intg(gamma1, ndotgrad_y(G)*U_1, IMir));
     }
-    else{ U_2 = 2*integralRepresentation(p_2, gamma2, intg(gamma1, ndotgrad_y(G)*u_1_tilde, IMir));}
+    else{ U_2 = 2*integralRepresentation(p_2, gamma2, intg(gamma1, ndotgrad_y(G)*U_1, IMir));}
 
-    BilinearForm blf= 0.5*intg(gamma2, p_2*q_2)-intg(gamma2, gamma2, p_2*ndotgrad_y(G)*q_2,IMie);
+    TermVector Pn = factSolve(K_f,M*U_2);
 
-    TermMatrix K(blf,"K");
-    TermVector P = directSolve(K,M*U_2);
+    P2+= Pn;
 
-    TermVector P2 = P2+  P;
-
-    U_1= integralRepresentation(p_1, gamma1, intg(gamma2, ndotgrad_y(G)*P, IMir));
-    grad_U_1= integralRepresentation(g_1,gamma1,intg(gamma2,grad_x(ndotgrad_y(G))*p_2,IMir),P);
+    U_1= integralRepresentation(p_1, gamma1, intg(gamma2, ndotgrad_y(G)*Pn, IMir));
+    grad_U_1= integralRepresentation(g_1,gamma1,intg(gamma2,grad_x(ndotgrad_y(G))*p_2,IMir),Pn);
 
 
   }

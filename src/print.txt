@@ -1,5 +1,5 @@
  XLiFE++ v2.3 (2022-04-22)
- running on 19.mar.2024 at 20h40 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
+ running on 19.mar.2024 at 23h45 on Linux-x86_64 (DESKTOP-K51EPNR), 12 available threads
 
 Machine epsilon                     theEpsilon_= 2.22045e-16
 Greatest real number (real_t)       theRealMax_= 1.79769e+308
@@ -16,9 +16,6 @@ TermMatrix M computed, size 128 X 128:   SuTermMatrix M_p_2_q_2 :   block (q_2, 
 
 TermMatrix K computed, size 128 X 128:   SuTermMatrix K_p_2_q_2 :   block (q_2, p_2) -> matrix 128 X 128 of complex scalar in row/column_dense (16384 coefficients)
 
- ...
-Warning XLiFE++ : undef_id_enumWords (see "print.txt" for more)
-The family <term type> does not have element <1953391971>.
 integralRepresentation(Unknown, GeomDomain, ...)>computeNormalsAt(vector<Point>, GeomDomain)>MeshDomain::setNormalOrientation ...
 Warning XLiFE++ : free_warning (see "print.txt" for more)
 in setNormalOrientation, domain Omega is not a manifold, nothing is done
